@@ -8,7 +8,10 @@ from core.interact import interact as io
 def extract_video(input_file, output_dir, output_ext=None, fps=None):
     input_file_path = Path(input_file)
     output_path = Path(output_dir)
-
+    
+    fps = 0
+    output_ext = "jpg"
+    
     if not output_path.exists():
         output_path.mkdir(exist_ok=True)
 
