@@ -104,12 +104,12 @@ class MergerConfigMasked(MergerConfig):
                        mode='overlay',
                        masked_hist_match=True,
                        hist_match_threshold = 238,
-                       mask_mode = 4,
+                       mask_mode = 9,
                        erode_mask_modifier = 0,
-                       blur_mask_modifier = 0,
+                       blur_mask_modifier = 200,
                        motion_blur_power = 0,
                        output_face_scale = 0,
-                       super_resolution_power = 0,
+                       super_resolution_power = 10,
                        color_transfer_mode = ctm_str_dict['rct'],
                        image_denoise_power = 0,
                        bicubic_degrade_power = 0,
@@ -208,22 +208,22 @@ class MergerConfigMasked(MergerConfig):
         for key in mask_mode_dict.keys():
             s += f"""({key}) {mask_mode_dict[key]}\n"""
         io.log_info(s)
-        self.mask_mode = io.input_int ("", 1, valid_list=mask_mode_dict.keys() )
+        self.mask_mode = io.input_int ("", 9, valid_list=mask_mode_dict.keys() )
 
         if 'raw' not in self.mode:
             self.erode_mask_modifier = np.clip ( io.input_int ("Choose erode mask modifier", 0, add_info="-400..400"), -400, 400)
-            self.blur_mask_modifier =  np.clip ( io.input_int ("Choose blur mask modifier", 0, add_info="0..400"), 0, 400)
+            self.blur_mask_modifier =  np.clip ( io.input_int ("Choose blur mask modifier", 200, add_info="0..400"), 0, 400)
             self.motion_blur_power = np.clip ( io.input_int ("Choose motion blur power", 0, add_info="0..100"), 0, 100)
 
         self.output_face_scale = np.clip (io.input_int ("Choose output face scale modifier", 0, add_info="-50..50" ), -50, 50)
 
         if 'raw' not in self.mode:
-            self.color_transfer_mode = io.input_str ( "Color transfer to predicted face", None, valid_list=list(ctm_str_dict.keys())[1:] )
+            self.color_transfer_mode = io.input_str ( "Color transfer to predicted face", "lct", valid_list=list(ctm_str_dict.keys())[1:] )
             self.color_transfer_mode = ctm_str_dict[self.color_transfer_mode]
 
         super().ask_settings()
 
-        self.super_resolution_power = np.clip ( io.input_int ("Choose super resolution power", 0, add_info="0..100", help_message="Enhance details by applying superresolution network."), 0, 100)
+        self.super_resolution_power = np.clip ( io.input_int ("Choose super resolution power", 10, add_info="0..100", help_message="Enhance details by applying superresolution network."), 0, 100)
 
         if 'raw' not in self.mode:
             self.image_denoise_power = np.clip ( io.input_int ("Choose image degrade by denoise power", 0, add_info="0..500"), 0, 500)
